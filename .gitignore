@@ -1,14 +1,42 @@
-node_modules/**/*
-.expo/*
 npm-debug.*
 *.jks
-*.p8
+*.jks.bak
 *.p12
 *.key
 *.mobileprovision
-*.orig.*
-web-build/
-web-report/
 
-# macOS
+# osx
 .DS_Store
+
+# intellij
+.idea
+local.properties
+
+# node.js
+node_modules/
+node_modules/**/*
+npm-debug.log
+
+# env
+env/index.js
+
+# expo
+
+.expo
+.expo/*
+.expo-shared/
+web-build/
+
+dist
+
+# Bundle artifact
+*.jsbundle
+
+# native
+
+# Android/IntelliJ
+#
+build/
+.gradle
+*.iml
+*.apk
