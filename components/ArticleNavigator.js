@@ -6,12 +6,14 @@ import LogoTitle from './LogoTitle';
 
 const { Navigator, Screen } = createStackNavigator();
 
-const ArticlesStackScreen = () => {
+const ArticlesStackScreen = ({ route }) => {
+  console.log(route.params);
   return (
-    <Navigator headerMode="none">
+    <Navigator headerMode="none" >
       <Screen
         name="ArticlesList"
         component={ArticlesList}
+        params={route.params}
         options={{ headerTitle: (props) => <LogoTitle {...props} /> }}
       />
       <Screen

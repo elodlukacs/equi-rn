@@ -4,12 +4,13 @@ import HTMLView from "react-native-htmlview";
 import { get } from "lodash";
 import { Container, Content } from "native-base";
 
-const ArticleDetails = ({ navigation, route }) => {
+const RideDetails = ({ navigation, route }) => {
 	const avatar = get(
 		route.params.article,
 		"better_featured_image.media_details.sizes.medium_large.source_url",
 		"http://equitransylvania.com/wp-content/uploads/2018/03/Kalifa-slider-300x111.jpg"
 	);
+	console.log(avatar);
 	return (
 		<Container>
 			<Content>
@@ -24,7 +25,7 @@ const ArticleDetails = ({ navigation, route }) => {
 	);
 };
 
-export default ArticleDetails;
+export default RideDetails;
 
 const styles = StyleSheet.create({
 	a: {

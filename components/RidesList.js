@@ -1,38 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, ActivityIndicator } from "react-native";
+import { Image, StyleSheet, Text, ActivityIndicator, SafeAreaView } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { get } from "lodash";
-import {
-  Container,
-  Content,
-  Card,
-  CardItem,
-  Body,
-  Right,
-  Badge,
-} from "native-base";
+import { TopNavigation, Layout, TopNavigationAction, Divider } from "@ui-kitten/components";
 
-const RidesList = ({ navigation }) => {
+const BackIcon = (props) => (
+  <Icon {...props} name='arrow-back' />
+);
+
+const RidesList = ({ params }) => {
   const [isLoading, setLoading] = useState(true);
   const [articles, setArticles] = useState([]);
 
+  console.log(params);
+
   useEffect(() => {
-    fetch(
-      "http://equitransylvania.com/wp-json/wp/v2/pages?include=100,174,178,176"
-    )
+    fetch("http://equitransylvania.com/wp-json/wp/v2/pages?include=100,174,178,176")
       .then((response) => response.json())
       .then((json) => setArticles(json))
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   }, []);
 
+  const navigateBack = () => {
+    navigation.goBack();
+  };
+
+  const BackAction = () => (
+    <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
+  );
+
   if (isLoading) {
     return <ActivityIndicator />
   }
 
   return (
-    <Container>
-      <Content>
+    <SafeAreaView style={{ flex: 1 }}>
+      <TopNavigation title="MyApp" alignment="center" leftControl={BackAction()} />
+      <Divider />
+      <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         {articles.map((article, i) => {
           const avatar = get(
             article,
@@ -41,40 +47,11 @@ const RidesList = ({ navigation }) => {
           );
 
           return (
-            <Card key={i}>
-              <CardItem
-                header
-                bordered
-                style={styles.cardHeader}
-                button
-                onPress={() => navigation.navigate("RideDetails", { article })}
-              >
-                <Body>
-                  <Text style={styles.cardTitle}>{article.title.rendered}</Text>
-                </Body>
-              </CardItem>
-              <CardItem
-                button
-                onPress={() => navigation.navigate("RideDetails", { article })}
-                cardBody
-              >
-                <Image
-                  source={{ uri: avatar }}
-                  style={{ height: 200, width: null, flex: 1 }}
-                />
-              </CardItem>
-              <CardItem>
-                <Right>
-                  <Badge>
-                    <Text>{article.date}</Text>
-                  </Badge>
-                </Right>
-              </CardItem>
-            </Card>
+            <Text>{article.title.rendered}</Text>
           );
         })}
-      </Content>
-    </Container>
+      </Layout>
+    </SafeAreaView>
   );
 };
 

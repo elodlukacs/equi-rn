@@ -8,9 +8,11 @@ const BackIcon = (props) => (
   <Icon {...props} name='arrow-back' />
 );
 
-const ArticlesList = ({ navigation }) => {
+const ArticlesList = ({ params }) => {
   const [isLoading, setLoading] = useState(true);
   const [articles, setArticles] = useState([]);
+
+  console.log(params);
 
   useEffect(() => {
     fetch("http://equitransylvania.com/wp-json/wp/v2/posts")
