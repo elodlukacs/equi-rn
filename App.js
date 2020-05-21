@@ -6,7 +6,7 @@ import { AppTabNavigator } from './components/AppTabNavigator';
 
 export default () => (
 	<>
-		<ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
+		<ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }}>
 			<AppTabNavigator />
 		</ApplicationProvider>
 	</>

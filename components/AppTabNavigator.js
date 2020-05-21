@@ -4,8 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from "@react-navigation/native";
 import { BottomNavigation, BottomNavigationTab, Layout, Text } from '@ui-kitten/components';
 import ArticlesStackScreen from "./ArticleStackScreen";
-import RidesStackScreen from "./RidesNavigator";
 import { FontAwesome5 } from "@expo/vector-icons";
+import {BLOG, RIDES} from "./constants";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -32,8 +32,8 @@ const BottomTabBar = ({ navigation, state }) => {
 
 const BottomTabNavigator = () => (
   <Navigator tabBar={props => <BottomTabBar {...props} />}>
-    <Screen name='Rides' component={ArticlesStackScreen} initialParams={{ screen: 'rides' }} />
-    <Screen name='Blog' component={RidesStackScreen} initialParams={{ screen: 'blog' }} />
+    <Screen name='Rides' component={ArticlesStackScreen} initialParams={{ screen: RIDES }} />
+    <Screen name='Blog' component={ArticlesStackScreen} initialParams={{ screen: BLOG }} />
   </Navigator>
 );
 

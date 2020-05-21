@@ -12,7 +12,6 @@ const ArticlesStackScreen = ({ route }) => {
       <Screen
         name="ArticlesList"
         component={ArticlesList}
-        options={{ headerTitle: (props) => <LogoTitle {...props} /> }}
         initialParams={{ route }}
       />
       <Screen

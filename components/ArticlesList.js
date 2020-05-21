@@ -3,33 +3,31 @@ import { Image, StyleSheet, ActivityIndicator, SafeAreaView, View } from "react-
 import HTMLView from "react-native-htmlview";
 import { get } from "lodash";
 import { TopNavigation, Layout, TopNavigationAction, Divider, Card, List, Text } from "@ui-kitten/components";
+import {RIDES} from "./constants";
 
 const BackIcon = (props) => (
   <Icon {...props} name='arrow-back' />
 );
 
 
-const ArticlesList = ({ route }) => {
+const ArticlesList = ({ navigation, route }) => {
   const [isLoading, setLoading] = useState(true);
   const [articles, setArticles] = useState([]);
 
-  console.log(route);
+  const getURL = () => {
+    const param = route.params.route.params.screen;
+    if (param === RIDES) return "http://equitransylvania.com/wp-json/wp/v2/posts?tags=119";
+
+    return "http://equitransylvania.com/wp-json/wp/v2/pages?include=100,174,178,176";
+  }
 
   useEffect(() => {
-    fetch("http://equitransylvania.com/wp-json/wp/v2/posts?tags=119")
+    fetch(getURL())
       .then((response) => response.json())
       .then((json) => setArticles(json))
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   }, []);
-
-  const navigateBack = () => {
-    navigation.goBack();
-  };
-
-  const BackAction = () => (
-    <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
-  );
 
   const renderItemHeader = (headerProps, articles) => {
     return (
@@ -53,7 +51,7 @@ const ArticlesList = ({ route }) => {
       status='basic'
       header={headerProps => renderItemHeader(headerProps, articles)}
       footer={renderItemFooter}
-      onPress={() => console.log('11111111')}
+      onPress={() => navigation.navigate('ArticleDetails', { article: articles.item })}
     >
       <Text numberOfLines={5}>
         {articles.item.excerpt.rendered.replace(/<\/?[^>]+>/gi, '')}
@@ -67,7 +65,6 @@ const ArticlesList = ({ route }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TopNavigation title="MyApp" alignment="center" leftControl={BackAction()} />
       <Divider />
       <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <List
