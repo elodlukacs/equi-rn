@@ -7,7 +7,6 @@ import LogoTitle from './LogoTitle';
 const { Navigator, Screen } = createStackNavigator();
 
 const RidesStackScreen = ({ route }) => {
-  console.log(route.params);
   return (
     <Navigator headerMode="none" >
       <Screen
