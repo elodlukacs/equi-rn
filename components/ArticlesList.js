@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, ActivityIndicator, SafeAreaView, View } from "react-native";
+import { Image, StyleSheet, ActivityIndicator, SafeAreaView, View, ImageBackground } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { get } from "lodash";
-import { TopNavigation, Layout, TopNavigationAction, Divider, Card, List, Text } from "@ui-kitten/components";
+import { Layout, Divider, Card, List, Text } from "@ui-kitten/components";
 import {RIDES} from "./constants";
-
-const BackIcon = (props) => (
-  <Icon {...props} name='arrow-back' />
-);
-
 
 const ArticlesList = ({ navigation, route }) => {
   const [isLoading, setLoading] = useState(true);
@@ -16,9 +11,9 @@ const ArticlesList = ({ navigation, route }) => {
 
   const getURL = () => {
     const param = route.params.route.params.screen;
-    if (param === RIDES) return "http://equitransylvania.com/wp-json/wp/v2/posts?tags=119";
+    if (param === RIDES) return "http://equitransylvania.com/wp-json/wp/v2/pages?include=100,174,178,176";
 
-    return "http://equitransylvania.com/wp-json/wp/v2/pages?include=100,174,178,176";
+    return "http://equitransylvania.com/wp-json/wp/v2/posts?tags=119";
   }
 
   useEffect(() => {
@@ -31,10 +26,11 @@ const ArticlesList = ({ navigation, route }) => {
 
   const renderItemHeader = (headerProps, articles) => {
     return (
-      <View {...headerProps}>
-        <Text category='h6'>
-          {articles.item.title.rendered}
-        </Text>
+      <View {...headerProps} style={styles.itemHeader}>
+        <ImageBackground
+          source={{ uri: articles.item.better_featured_image.media_details.sizes.medium_large.source_url}}
+          style={styles.imageBackground}
+        />
       </View>
     )
   };
@@ -47,12 +43,15 @@ const ArticlesList = ({ navigation, route }) => {
 
   const renderItem = (articles) => (
     <Card
-      style={styles.item}
+      style={styles.card}
       status='basic'
       header={headerProps => renderItemHeader(headerProps, articles)}
       footer={renderItemFooter}
-      onPress={() => navigation.navigate('ArticleDetails', { article: articles.item })}
+      onPress={() => navigation.navigate('ArticleDetails', { article: articles.item,  })}
     >
+      <Text category='h5' style={styles.itemContent}>
+        {articles.item.title.rendered}
+      </Text>
       <Text numberOfLines={5}>
         {articles.item.excerpt.rendered.replace(/<\/?[^>]+>/gi, '')}
       </Text>
@@ -79,17 +78,25 @@ const ArticlesList = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
-  a: {
-    display: "none",
+  container: {
+    flex: 1,
   },
   contentContainer: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
-  item: {
-    marginVertical: 4,
+  card: {
+    marginVertical: 20,
   },
+  imageBackground: {
+    height:220,
+  },
+  itemHeader: {
+    padding:0,
+  },
+  itemContent: {
+    marginVertical: 10,
+  }
 });
 
 export default ArticlesList;
@@ -130,92 +137,3 @@ export default ArticlesList;
 //     'https://docs.expo.io/versions/latest/get-started/create-a-new-app/#making-your-first-change'
 //   );
 // }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//   },
-//   developmentModeText: {
-//     marginBottom: 20,
-//     color: 'rgba(0,0,0,0.4)',
-//     fontSize: 14,
-//     lineHeight: 19,
-//     textAlign: 'center',
-//   },
-//   contentContainer: {
-//     paddingTop: 30,
-//   },
-//   welcomeContainer: {
-//     alignItems: 'center',
-//     marginTop: 10,
-//     marginBottom: 20,
-//   },
-//   welcomeImage: {
-//     width: 100,
-//     height: 80,
-//     resizeMode: 'contain',
-//     marginTop: 3,
-//     marginLeft: -10,
-//   },
-//   getStartedContainer: {
-//     alignItems: 'center',
-//     marginHorizontal: 50,
-//   },
-//   homeScreenFilename: {
-//     marginVertical: 7,
-//   },
-//   codeHighlightText: {
-//     color: 'rgba(96,100,109, 0.8)',
-//   },
-//   codeHighlightContainer: {
-//     backgroundColor: 'rgba(0,0,0,0.05)',
-//     borderRadius: 3,
-//     paddingHorizontal: 4,
-//   },
-//   getStartedText: {
-//     fontSize: 17,
-//     color: 'rgba(96,100,109, 1)',
-//     lineHeight: 24,
-//     textAlign: 'center',
-//   },
-//   tabBarInfoContainer: {
-//     position: 'absolute',
-//     bottom: 0,
-//     left: 0,
-//     right: 0,
-//     ...Platform.select({
-//       ios: {
-//         shadowColor: 'black',
-//         shadowOffset: { width: 0, height: -3 },
-//         shadowOpacity: 0.1,
-//         shadowRadius: 3,
-//       },
-//       android: {
-//         elevation: 20,
-//       },
-//     }),
-//     alignItems: 'center',
-//     backgroundColor: '#fbfbfb',
-//     paddingVertical: 20,
-//   },
-//   tabBarInfoText: {
-//     fontSize: 17,
-//     color: 'rgba(96,100,109, 1)',
-//     textAlign: 'center',
-//   },
-//   navigationFilename: {
-//     marginTop: 5,
-//   },
-//   helpContainer: {
-//     marginTop: 15,
-//     alignItems: 'center',
-//   },
-//   helpLink: {
-//     paddingVertical: 15,
-//   },
-//   helpLinkText: {
-//     fontSize: 14,
-//     color: '#2e78b7',
-//   },
-// });
