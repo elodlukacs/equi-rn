@@ -37,7 +37,7 @@ const ArticlesList = ({ navigation, route }) => {
 
   const renderItemFooter = (footerProps) => (
     <Text {...footerProps}>
-      By Wikipedia
+      By Me
     </Text>
   );
 
