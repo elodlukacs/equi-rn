@@ -22,13 +22,6 @@ const ArticleDetails = ({navigation, route}) => {
 			onPress={() => navigation.goBack()}
 		/>
 	);
-	// const navigateBack = () => {
-	//   navigation.goBack();
-	// };
-	//
-	// const BackAction = () => (
-	//     <TopNavigationAction icon={BackIcon} onPress={navigateBack} />
-	// );
 
 	const avatar = get(
 		route.params.article,
@@ -36,26 +29,6 @@ const ArticleDetails = ({navigation, route}) => {
 		"http://equitransylvania.com/wp-content/uploads/2018/03/Kalifa-slider-300x111.jpg"
 	);
 
-	// return (
-	//   <SafeAreaView>
-	//     <TopNavigation
-	//       accessoryLeft={BackAction}
-	//       title="Lofasz"
-	//       style={{ flex: 1 }}
-	//     />
-	//     <Layout>
-	//       <Text category='h4'>{route.params.article.title.rendered}</Text>
-	//       <Image
-	//           source={{ uri: avatar }}
-	//           style={{ height: 200 }}
-	//       />
-	//       <HTMLView
-	//           value={route.params.article.content.rendered}
-	//           stylesheet={styles}
-	//       />
-	//     </Layout>
-	//   </SafeAreaView>
-	// );
 	return (
 		<Layout style={styles.container}>
 			<TopNavigation
@@ -74,12 +47,6 @@ const ArticleDetails = ({navigation, route}) => {
 					status='control'>
 					{route.params.article.title.rendered}
 				</Text>
-				{/*<Text*/}
-				{/*	style={styles.headerDescription}*/}
-				{/*	category='s1'*/}
-				{/*	status='control'>*/}
-				{/*	Faaaaszzzz*/}
-				{/*</Text>*/}
 			</ImageBackground>
 			<Layout
 				style={styles.contentContainer}
