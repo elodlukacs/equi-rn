@@ -1,20 +1,38 @@
-import React, {useEffect, useState} from "react";
-import {Image, StyleSheet, View, SafeAreaView, ImageBackground} from "react-native";
+import React, { useEffect, useState } from "react";
+import { Image, StyleSheet, View, ImageBackground } from "react-native";
 import HTMLView from "react-native-htmlview";
-import {get} from "lodash";
-import {Container, Content} from "native-base";
-import {TopNavigation, TopNavigationAction, Text, Layout, Divider} from "@ui-kitten/components";
-import {FontAwesome5} from "@expo/vector-icons";
+import { get, reduce } from "lodash";
+import { TopNavigation, TopNavigationAction, Text, Layout, Divider } from "@ui-kitten/components";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { ScrollView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { WebView } from 'react-native-webview';
 
 const BackIcon = (props) => (
-	<FontAwesome5 {...props} name="chevron-left"/>
+	<FontAwesome5 {...props} size={24} name="chevron-left" />
 );
 
 // const BackIcon = (props) => (
 //     <Icon {...props} name='arrow-back'/>
 // );
 
-const ArticleDetails = ({navigation, route}) => {
+const Title = () => (
+	<Text style={styles.topNavigationText}>Back</Text>
+);
+
+const renderNode = (node, index, siblings, parent, defaultRenderer) => {
+  if (node.name == 'h4') {
+		console.log(node.children);
+    const pHtml = `<p></p>`;
+    return (
+      <View key={index} style={styles.paragraph}>
+        <WebView source={{html: pHtml}} />
+      </View>
+    );
+  }
+}
+
+const ArticleDetails = ({ navigation, route }) => {
 
 	const BackAction = () => (
 		<TopNavigationAction
@@ -30,34 +48,42 @@ const ArticleDetails = ({navigation, route}) => {
 	);
 
 	return (
-		<Layout style={styles.container}>
-			<TopNavigation
-				accessoryLeft={BackAction}
-				title="Lofasz"
-				style={styles.topNavigation}
-			/>
-			<ImageBackground
-				style={styles.headerContainer}
-				source={{uri: avatar}}
-				blurRadius={1.5}
-			>
-				<Text
-					style={styles.headerTitle}
-					category='h3'
-					status='control'>
-					{route.params.article.title.rendered}
-				</Text>
-			</ImageBackground>
-			<Layout
-				style={styles.contentContainer}
-				level='1'>
-				<HTMLView
-					value={route.params.article.content.rendered}
-					stylesheet={styles}
-				/>
-			</Layout>
-			<Divider/>
-		</Layout>
+		<SafeAreaView>
+			<ScrollView>
+				<Layout style={styles.container}>
+					<TopNavigation
+						accessoryLeft={BackAction}
+						title={() => <Title/>}
+						style={styles.topNavigation}
+					/>
+					<ImageBackground
+						style={styles.headerContainer}
+						source={{ uri: avatar }}
+						blurRadius={1.5}
+					>
+						<Text
+							style={styles.headerTitle}
+							category='h3'
+							status='control'>
+							{route.params.article.title.rendered}
+						</Text>
+					</ImageBackground>
+					<Layout
+						style={styles.contentContainer}
+						level='1'
+					>
+						<HTMLView
+							value={route.params.article.content.rendered}
+							stylesheet={styles}
+							renderNode={renderNode}
+						/>
+						{/* <Text>{route.params.article.content.rendered}</Text> */}
+						{/* <WebView source={route.params.article.content.rendered}></WebView> */}
+					</Layout>
+					<Divider />
+				</Layout>
+			</ScrollView>
+		</SafeAreaView>
 	)
 
 };
@@ -68,8 +94,25 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1
 	},
-	topNavigation: {
-		minHeight: 80,
+	p: {
+		fontSize: 12,
+		margin: 0,
+		padding: 0,
+	},
+	paragraph: {
+		color: 'red'
+	},
+	articleText: {
+		paddingBottom: 0,
+		padding: 0,
+		margin: 0,
+	},
+	topNavigationText: {
+		fontSize: 16
+	},
+	backIcon: {
+		height: 20,
+		backgroundColor: 'red',
 	},
 	headerContainer: {
 		alignItems: 'center',
