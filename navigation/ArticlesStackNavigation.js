@@ -1,12 +1,11 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import ArticlesList from "./ArticlesList";
-import ArticleDetails from "./ArticleDetails";
-import LogoTitle from './LogoTitle';
+import ArticlesList from "../screens/ArticlesList";
+import ArticleDetails from "../screens/ArticleDetails";
 
 const { Navigator, Screen } = createStackNavigator();
 
-const ArticlesStackScreen = ({ route }) => {
+const ArticlesStackNavigation = ({ route }) => {
   return (
     <Navigator headerMode="none" >
       <Screen
@@ -23,4 +22,4 @@ const ArticlesStackScreen = ({ route }) => {
   );
 };
 
-export default ArticlesStackScreen;
+export default ArticlesStackNavigation;
