@@ -6,7 +6,6 @@ import {
   View,
   ImageBackground,
 } from "react-native";
-import HTMLView from "react-native-htmlview";
 import { get } from "lodash";
 import { Layout, Divider, Card, List, Text } from "@ui-kitten/components";
 import { RIDES } from "../components/constants";
