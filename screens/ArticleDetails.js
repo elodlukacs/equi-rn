@@ -1,72 +1,74 @@
-import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View, ImageBackground } from "react-native";
+import React from "react";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
+import { SharedElement } from "react-navigation-shared-element";
 import { get, reduce } from "lodash";
-import { TopNavigation, TopNavigationAction, Text, Layout, Divider } from "@ui-kitten/components";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { ScrollView } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { parse } from 'himalaya';
+import { parse } from "himalaya";
+import { Feather } from "@expo/vector-icons";
 
-const BackIcon = (props) => (
-	<FontAwesome5 {...props} size={24} name="chevron-left" />
-);
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+  },
+  image: {
+    width: "100%",
+    height: 200,
+  },
+  text: {
+    marginTop: 20,
+    fontSize: 30,
+    color: "white",
+  },
+});
 
-// const BackIcon = (props) => (
-//     <Icon {...props} name='arrow-back'/>
-// );
+const ArticlesDetails = (props) => {
+  const { data } = props.route.params;
+  const { width, height } = Dimensions.get("window");
 
-const Title = () => (
-	<Text style={styles.topNavigationText}>Back</Text>
-);
+  const avatar = get(
+    data,
+    "better_featured_image.media_details.sizes.medium_large.source_url",
+    "http://equitransylvania.com/wp-content/uploads/2018/03/Kalifa-slider-300x111.jpg"
+  );
 
-const ArticleDetails = ({ navigation, route }) => {
-
-	const [articleContent, setArticleContent] = useState('');
-
-	useEffect(()=> {
-		setArticleContent(route.params.article.content.rendered);
-	}, [])
-
-	const BackAction = () => (
-		<TopNavigationAction
-			icon={BackIcon}
-			onPress={() => navigation.goBack()}
-		/>
-	);
-
-	const avatar = get(
-		route.params.article,
-		"better_featured_image.media_details.sizes.medium_large.source_url",
-		"http://equitransylvania.com/wp-content/uploads/2018/03/Kalifa-slider-300x111.jpg"
-	);
-
-	return (
-		<SafeAreaView>
-			<ScrollView>
-				<Layout style={styles.container}>
-					<TopNavigation
-						accessoryLeft={BackAction}
-						title={() => <Title/>}
-						style={styles.topNavigation}
-					/>
-					<ImageBackground
-						style={styles.headerContainer}
-						source={{ uri: avatar }}
-						blurRadius={1.5}
-					>
-						<Text
-							style={styles.headerTitle}
-							category='h3'
-							status='control'>
-							{route.params.article.title.rendered}
-						</Text>
-					</ImageBackground>
-					<Layout
-						style={styles.contentContainer}
-						level='1'
-					>
-						{
-							parse(articleContent).map((e) => {
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <SharedElement
+          id={`item.${data.id}.photo`}
+          style={StyleSheet.absoluteFill}>
+          <Image
+            style={{
+              width: "100%",
+              height: height - 450,
+              borderBottomLeftRadius: 10,
+              borderBottomRightRadius: 10,
+            }}
+            resizeMode='cover'
+            source={{
+              uri:
+                data.better_featured_image.media_details.sizes.medium_large
+                  .source_url,
+            }}
+          />
+        </SharedElement>
+        <SharedElement id={`item.${data.id}.text`}>
+          <Text style={styles.text}>{data.title.rendered}</Text>
+        </SharedElement>
+        <TouchableOpacity
+          onPress={() => props.navigation.goBack()}
+          style={{ backgroundColor: "white", borderRadius: 50 }}>
+          <Feather name='arrow-left' size={24} color='black' />
+        </TouchableOpacity>
+				{/* {
+							parse(data.content.rendered).map((e) => {
 								if (e.tagName === 'h4') {
 									return <Text style={styles.title}>{e.children[0].content}</Text>
 								}
@@ -85,59 +87,10 @@ const ArticleDetails = ({ navigation, route }) => {
 
 								return
 							})
-						}
-					</Layout>
-					<Divider />
-				</Layout>
-			</ScrollView>
-		</SafeAreaView>
-	)
-
+						} */}
+      </View>
+    </View>
+  );
 };
 
-export default ArticleDetails;
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	title: {
-		fontSize: 24,
-		marginVertical: 10,
-	},
-	subTitle: {
-		fontSize: 20,
-		marginVertical: 10,
-	},
-	image: {
-		height:200,
-		marginVertical: 20,
-	},
-	articleText: {
-		paddingTop: 10,
-	},
-	topNavigationText: {
-		fontSize: 16
-	},
-	backIcon: {
-		height: 20,
-	},
-	headerContainer: {
-		alignItems: 'center',
-		minHeight: 256,
-		justifyContent: "center"
-	},
-	headerTitle: {
-		paddingHorizontal: 20,
-		marginVertical: 20,
-		textAlign: 'center',
-		zIndex: 1,
-	},
-	headerDescription: {
-		zIndex: 1,
-	},
-	contentContainer: {
-		flex: 1,
-		padding: 24,
-	},
-});
+export default ArticlesDetails;

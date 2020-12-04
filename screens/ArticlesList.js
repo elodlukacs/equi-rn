@@ -1,25 +1,39 @@
-import React, { useEffect, useState } from "react";
-import {
-  Image,
-  StyleSheet,
-  ActivityIndicator,
-  View,
-  ImageBackground,
-} from "react-native";
-import { get } from "lodash";
-import { Layout, Divider, Card, List, Text } from "@ui-kitten/components";
-import { RIDES } from "../components/constants";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { FooterTab } from "native-base";
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Text, Image, FlatList } from "react-native";
+import { SharedElement } from "react-navigation-shared-element";
+import TouchableScale from "react-native-touchable-scale";
 
-const ArticlesList = ({ navigation, route }) => {
+const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 40,
+  },
+  caption: {
+    fontSize: 20,
+    opacity: 0.5,
+  },
+  image: {
+    width: 200,
+    height: 160,
+    resizeMode: "contain",
+  },
+});
+
+const ArticlesList = ({ navigation }) => {
   const [isLoading, setLoading] = useState(true);
   const [articles, setArticles] = useState([]);
 
   const getURL = () => {
-    const param = route.params.route.params.screen;
-    if (param === RIDES)
-      return "http://equitransylvania.com/wp-json/wp/v2/pages?include=100,174,178,176";
+  //   const param = route.params.route.params.screen;
+  //   if (param === RIDES)
+  //     return "http://equitransylvania.com/wp-json/wp/v2/pages?include=100,174,178,176";
 
     return "http://equitransylvania.com/wp-json/wp/v2/posts?tags=119";
   };
@@ -31,93 +45,44 @@ const ArticlesList = ({ navigation, route }) => {
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   }, []);
-
-  const renderItemHeader = (headerProps, articles) => {
-    return (
-      <View {...headerProps} style={styles.itemHeader}>
-        <ImageBackground
-          source={{
-            uri:
-              articles.item.better_featured_image.media_details.sizes
-                .medium_large.source_url,
-          }}
-          style={styles.imageBackground}
-        />
-      </View>
-    );
-  };
-
-  const authors = {
-    2: "Lukacs Lehel",
-  };
-
-  const renderItemFooter = (footerProps, articles) => {
-    return <Text {...footerProps}>by: {authors[articles.item.author]}</Text>;
-  };
-
-  const renderItem = (articles) => (
-    <Card
-      style={styles.card}
-      status='basic'
-      header={(headerProps) => renderItemHeader(headerProps, articles)}
-      footer={(footerProps) => renderItemFooter(footerProps, articles)}
-      onPress={() =>
-        navigation.navigate("ArticleDetails", { article: articles.item })
-      }>
-      <Text category='h5' style={styles.itemContent}>
-        {articles.item.title.rendered}
-      </Text>
-      <Text numberOfLines={5}>
-        {articles.item.excerpt.rendered.replace(/<\/?[^>]+>/gi, "")}
-      </Text>
-    </Card>
-  );
-
-  if (isLoading) {
-    return (
-      <ActivityIndicator style={{ flex: 1 }} size='large' color='#202833' />
-    );
-  }
-
+  
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Divider />
-      <Layout
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <List
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-          data={articles}
-          renderItem={renderItem}
-        />
-      </Layout>
-    </SafeAreaView>
+    <View style={{ flex: 1 }}>
+      <FlatList
+        showsHorizontalScrollIndicator={false}
+        data={articles}
+        // keyExtractor={(item) => item.id}
+        style={{ paddingHorizontal: 30 }}
+        renderItem={({item}) => {
+          return (
+            <TouchableScale
+              style={styles.flex}
+              activeScale={0.9}
+              tension={50}
+              friction={7}
+              useNativeDriver
+              onPress={() => navigation.navigate("ArticlesDetails", { data: item })}>
+              <View style={styles.container}>
+                <SharedElement id={`item.${item.id}.photo`}>
+                  <Image
+                    style={styles.image}
+                    source={{
+                      uri: item.better_featured_image.media_details.sizes
+                      .medium_large.source_url
+                    }}
+                  />
+                </SharedElement>
+                <SharedElement id={`item.${item.id}.text`}>
+                  <Text style={styles.text}>{item.title.rendered}</Text>
+                </SharedElement>
+                  <Text style={styles.caption}>{item.excerpt.rendered.replace(/<\/?[^>]+>/gi, "")}</Text>
+              </View>
+            </TouchableScale>
+          );
+        }}
+      />
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    paddingHorizontal: 10,
-  },
-  card: {
-    marginVertical: 20,
-  },
-  imageBackground: {
-    height: 220,
-  },
-  itemHeader: {
-    padding: 0,
-  },
-  itemContent: {
-    marginVertical: 10,
-  },
-  loading: {
-    flex: 1,
-    alignSelf: "center",
-  },
-});
 
 export default ArticlesList;
